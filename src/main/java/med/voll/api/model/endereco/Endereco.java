@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Endereco {
 
-    private Long id;
     private String logradouro;
     private String bairro;
     private String cep;
