@@ -18,7 +18,6 @@ public class Medico {
     private Long id;
     private String nome;
     private String email;
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")
     private String telefone;
     private String crm;
     @Enumerated(EnumType.STRING)
