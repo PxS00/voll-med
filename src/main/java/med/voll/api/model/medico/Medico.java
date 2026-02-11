@@ -2,7 +2,6 @@ package med.voll.api.model.medico;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import med.voll.api.model.endereco.Endereco;
 
