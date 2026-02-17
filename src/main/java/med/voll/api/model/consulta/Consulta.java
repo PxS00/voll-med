@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import med.voll.api.infrastructure.exception.ValidacaoException;
 import med.voll.api.model.medico.Medico;
 import med.voll.api.model.paciente.Paciente;
 import java.time.LocalDateTime;
@@ -22,13 +23,30 @@ public class Consulta {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_paciente")
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_medico")
+    @JoinColumn(name = "medico_id")
     private Medico medico;
 
+    @Column(name = "data_consulta")
     private LocalDateTime data;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "motivo_cancelamento")
+    private MotivoCancelamento motivoCancelamento;
+
+
+    public void cancelar(MotivoCancelamento motivoCancelamento) {
+
+        if (this.motivoCancelamento != null) {
+            throw new ValidacaoException("Consulta já está cancelada!");
+        }
+
+        if (motivoCancelamento == null) {
+            throw new ValidacaoException("Motivo do cancelamento é obrigatório");
+        }
+        this.motivoCancelamento = motivoCancelamento;
+    }
 }

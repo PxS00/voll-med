@@ -1,16 +1,15 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.model.consulta.AgendaDeConsultasService;
-import med.voll.api.model.consulta.DadosAgendamentoConsulta;
-import med.voll.api.model.consulta.DadosDetalhamentoConsulta;
+import med.voll.api.model.consulta.*;
+import med.voll.api.model.medico.DadosListagemMedico;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/consultas")
@@ -22,8 +21,25 @@ public class ConsultaController {
     @PostMapping
     @Transactional
     public ResponseEntity agendar(@RequestBody @Valid DadosAgendamentoConsulta dados) {
-        agendaDeConsultas.agendar(dados);
-        return ResponseEntity.ok(new DadosDetalhamentoConsulta(null, null, null, null));
+        var dto = agendaDeConsultas.agendar(dados);
+        return ResponseEntity.ok(dto);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemConsulta>> listar(
+            @PageableDefault(size = 10, sort = {"id"}) Pageable pageable) {
+
+        var page = agendaDeConsultas.listar(pageable)
+                .map(DadosListagemConsulta::new);
+
+        return ResponseEntity.ok(page);
+    }
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity cancelar(@RequestBody @Valid DadosCancelamentoConsulta dados) {
+        agendaDeConsultas.cancelar(dados);
+        return ResponseEntity.noContent().build();
     }
 }
